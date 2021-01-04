@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace JudgeMyTaste
+namespace first_asp_net_sql
 {
     public class Program
     {

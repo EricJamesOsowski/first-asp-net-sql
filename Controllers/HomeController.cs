@@ -5,9 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using JudgeMyTaste.Models;
+using first_asp_net_sql.Models;
 
-namespace JudgeMyTaste.Controllers
+namespace first_asp_net_sql.Controllers
 {
     public class HomeController : Controller
     {

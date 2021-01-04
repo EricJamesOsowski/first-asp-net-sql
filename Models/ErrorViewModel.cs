@@ -1,6 +1,6 @@
 using System;
 
-namespace JudgeMyTaste.Models
+namespace first_asp_net_sql.Models
 {
     public class ErrorViewModel
     {
