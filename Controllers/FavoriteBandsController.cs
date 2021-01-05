@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using JudgeMyTaste.Data;
 using JudgeMyTaste.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Controllers
 {
@@ -53,12 +54,14 @@ namespace Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,EnteredBy")] FavoriteBand favoriteBand)
+        public async Task<IActionResult> Create([Bind("Id,Name")] FavoriteBand favoriteBand)
         {
             if (ModelState.IsValid)
             {
                 favoriteBand.EnteredOn = DateTime.Now;
+                favoriteBand.EnteredBy = User.Identity.Name;
                 _context.Add(favoriteBand);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -85,6 +88,8 @@ namespace Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize]
+
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,EnteredBy,EnteredOn")] FavoriteBand favoriteBand)
         {
@@ -97,7 +102,13 @@ namespace Controllers
             {
                 try
                 {
-                    _context.Update(favoriteBand);
+                    var existingBand = await _context.FavoriteBands.FindAsync(id);
+                    if(existingBand.EnteredBy != User.Identity.Name)
+                    {
+                        return Unauthorized();
+                    }
+                    existingBand.Name = favoriteBand.Name;
+                    _context.Update(existingBand);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -117,6 +128,7 @@ namespace Controllers
         }
 
         // GET: FavoriteBands/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -126,6 +138,12 @@ namespace Controllers
 
             var favoriteBand = await _context.FavoriteBands
                 .FirstOrDefaultAsync(m => m.Id == id);
+            
+            if (favoriteBand.EnteredBy != User.Identity.Name) 
+            {
+                return Unauthorized();
+            }
+            
             if (favoriteBand == null)
             {
                 return NotFound();

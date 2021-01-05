@@ -16,7 +16,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.1" />
-    <PackageReference Include="Okta.AspNetCore" Version="1.1.5" />
+    <PackageReference Include="Okta.AspNetCore" Version="3.5.0" />
   </ItemGroup>
 
 </Project>
